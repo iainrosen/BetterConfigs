@@ -45,10 +45,3 @@ class config:
             raise Exception("unable to find the configuration")
         except:
             raise Exception("error writing configuration file or property could not be deleted")
-def listConfigurations(path, key):
-    configFiles = os.listdir(path)
-    configs = []
-    for i in configFiles:
-        configPath = path+"/"+i
-        configs.append(config(configPath)[key])
-    return configs
