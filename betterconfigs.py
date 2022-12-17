@@ -1,6 +1,6 @@
 import pickle
 import os
-executableVersion = "B0.3"
+executableVersion = "B0.4"
 class config:
     def __init__(self, path) -> None:
         self.path = path
