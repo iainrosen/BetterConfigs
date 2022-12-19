@@ -1,4 +1,4 @@
-from betterconfigs import *
+from src.betterconfigs import *
 import os
 def test_basic():
     h = config('tests/test.config')

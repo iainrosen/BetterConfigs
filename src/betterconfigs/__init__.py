@@ -1,7 +1,7 @@
 import pickle
 import os
 import warnings
-executableVersion = "B0.4"
+executableVersion = "B0.5"
 class config:
     def __init__(self, path) -> None:
         self.path = path
@@ -63,6 +63,9 @@ class config:
             raise NameError("property doesn't exist in configuration")
 def upgradeConfig(path):
     match config(path)['version']:
+        case "B0.4":
+            config(path)['version']=executableVersion
+            return 0
         case "B0.3":
             warnings.warn("Warning, listConfigurations is depricated.")
             config(path)['version']=executableVersion
