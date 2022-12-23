@@ -16,4 +16,9 @@ def test_remove():
     with pytest.raises(Exception):
         h['hello']
     os.remove('test.config')
-    
+def test_change_version():
+    h = config('test.config')
+    h['hello'] = 'world'
+    assert(h['hello']=='world')
+    with pytest.raises(Exception):
+        h['configurationVersion'] = 'test'    
