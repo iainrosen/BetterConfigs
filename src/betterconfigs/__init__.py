@@ -15,7 +15,7 @@ class config:
                 raise Exception("attempted to initialize the configuration file but was unable to write")
     def __getitem__(self, key):
         if self.getVersion()!=executableVersion:
-            warnings.warn("version mismatch! run upgradeConfig.")
+            warnings.warn("version mismatch!")
         try:
             with open(self.path, 'rb') as handle:
                 loadedConfig = pickle.load(handle)
@@ -28,7 +28,7 @@ class config:
         if key == 'configurationVersion':
             raise Exception("unable to change configuration version without upgrading")
         if self.getVersion()!=executableVersion:
-            warnings.warn("version mismatch! run upgradeConfig.")
+            warnings.warn("version mismatch!")
         try:
             with open(self.path, 'rb') as handle:
                 loadedConfig = pickle.load(handle)
@@ -44,7 +44,7 @@ class config:
         if key == 'configurationVersion':
             raise Exception("unable to delete configuration version")
         if self.getVersion()!=executableVersion:
-            warnings.warn("version mismatch! run upgradeConfig.")
+            warnings.warn("version mismatch!")
         try:
             with open(self.path, 'rb') as handle:
                 loadedConfig = pickle.load(handle)
