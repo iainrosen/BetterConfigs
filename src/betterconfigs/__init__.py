@@ -1,14 +1,14 @@
 import pickle
 import os
 import warnings
-executableVersion = "0.6"
+executableVersion = "0.7"
 class config:
     def __init__(self, path) -> None:
         self.path = path
         if os.path.exists(path)==False:
             try:
                 loadConfig = {}
-                loadConfig['configurationVersion'] = executableVersion
+                loadConfig['_version'] = executableVersion
                 with open(self.path, 'wb') as handle:
                     pickle.dump(loadConfig, handle, protocol=pickle.HIGHEST_PROTOCOL)
             except:
@@ -25,7 +25,7 @@ class config:
         except:
             raise NameError("property doesn't exist in configuration")
     def __setitem__(self, key, value):
-        if key == 'configurationVersion':
+        if key == '_version':
             raise Exception("unable to change configuration version without upgrading")
         if self.getVersion()!=executableVersion:
             warnings.warn("version mismatch!")
@@ -41,7 +41,7 @@ class config:
         except:
             raise Exception("error writing configuration file")
     def __delitem__(self, key):
-        if key == 'configurationVersion':
+        if key == '_version':
             raise Exception("unable to delete configuration version")
         if self.getVersion()!=executableVersion:
             warnings.warn("version mismatch!")
@@ -60,9 +60,9 @@ class config:
         try:
             with open(self.path, 'rb') as handle:
                 loadedConfig = pickle.load(handle)
-            return loadedConfig['configurationVersion']
+            return loadedConfig['_version']
         except FileNotFoundError:
             raise Exception("configuration might not be initialized")
         except:
-            raise NameError("configurationVersion property doesn't exist in configuration")
+            raise NameError("_version property doesn't exist in configuration")
         
