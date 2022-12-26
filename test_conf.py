@@ -5,13 +5,13 @@ def test_basic():
     h = config('test.config')
     h['hello'] = 'world'
     assert(h['hello']=='world')
-    assert(h['configurationVersion']==executableVersion)
+    assert(h['_version']==executableVersion)
     os.remove('test.config')
 def test_remove():
     h = config('test.config')
     h['hello'] = 'world'
     assert(h['hello']=='world')
-    assert(h['configurationVersion']==executableVersion)
+    assert(h['_version']==executableVersion)
     del(h['hello'])
     with pytest.raises(Exception):
         h['hello']
@@ -21,4 +21,5 @@ def test_change_version():
     h['hello'] = 'world'
     assert(h['hello']=='world')
     with pytest.raises(Exception):
-        h['configurationVersion'] = 'test'    
+        h['_version'] = 'test'
+    os.remove('test.config') 
