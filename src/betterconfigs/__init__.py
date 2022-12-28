@@ -15,8 +15,6 @@ class config:
                 raise Exception("attempted to initialize the configuration file but was unable to write")
     def __getitem__(self, key):
         self.checkReady()
-        if self.getVersion()!=executableVersion:
-            warnings.warn("version mismatch!")
         try:
             with open(self.path, 'rb') as handle:
                 loadedConfig = pickle.load(handle)
@@ -67,5 +65,3 @@ class config:
     def checkReady(self):
         if self.getRaw('_version')!=executableVersion:
             warnings.warn("version mismatch!")
-        if not self.isUnlocked:
-            raise Exception('configuration is locked, use unlock(key)')
