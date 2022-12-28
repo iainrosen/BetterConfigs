@@ -83,3 +83,25 @@ class config:
         self.checkReady()
         fernet = Fernet(self.encKey)
         return fernet.decrypt(self.getRaw(key)).decode()
+    def encryptFile(self):
+        self.checkReady()
+        with open(self.path, 'rb') as handle:
+                loadedConfig = pickle.load(handle)
+        for i in loadedConfig:
+            if not i.startswith("_"):
+                loadedConfig[i] = self.encryptValue(loadedConfig[i])
+        loadedConfig['_encrypted']=True
+        with open(self.path, 'wb') as handle:
+                pickle.dump(loadedConfig, handle, protocol=pickle.HIGHEST_PROTOCOL)
+        return 0
+    def decryptFile(self):
+        self.checkReady()
+        with open(self.path, 'rb') as handle:
+                loadedConfig = pickle.load(handle)
+        for i in loadedConfig:
+            if not i.startswith("_"):
+                loadedConfig[i] = self.decryptValue(i)
+        loadedConfig['_encrypted']=False
+        with open(self.path, 'wb') as handle:
+                pickle.dump(loadedConfig, handle, protocol=pickle.HIGHEST_PROTOCOL)
+        return 0
