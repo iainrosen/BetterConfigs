@@ -31,3 +31,30 @@ def test_encryption_checks():
     assert(t['_encrypted']==False)
     assert(t.encKey==None)
     os.remove('test.config')
+def test_encryption():
+    h = config('test.config')
+    assert(h['_encrypted']==False)
+    assert(h.encKey!=None)
+    h['hello']='world'
+    assert(h.encryptFile()==0)
+    assert(h['hello']=='world')
+    assert(h.getRaw('hello')!='world')
+    assert(h.getRaw('_version')=='0.7')
+    encryptionKey = h.encKey
+    t = config('test.config')
+    assert(t.getRaw('_encrypted')==True)
+    with pytest.raises(Exception):
+        t['hello']='world'
+    os.remove('test.config')
+def test_decryption():
+    h = config('test.config')
+    assert(h['_encrypted']==False)
+    assert(h.encKey!=None)
+    h['hello']='world'
+    assert(h.encryptFile()==0)
+    assert(h['hello']=='world')
+    assert(h.getRaw('hello')!='world')
+    assert(h.decryptFile()==0)
+    assert(h['hello']=='world')
+    assert(h.getRaw('hello')=='world')
+    os.remove('test.config')
