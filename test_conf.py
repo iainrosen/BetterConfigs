@@ -65,3 +65,16 @@ def test_checksum():
     h['hello']='world'
     assert(h.encryptFile()==0)
     assert(h.checkEncryptionValidity()==0)
+    os.remove('test.config')
+def test_encdec():
+    h = config('test.config')
+    h['hello']='world'
+    assert(h.encryptFile()==0)
+    h['hello2']='world2'
+    encryptionKey = h.encKey
+    t = config('test.config')
+    t.encKey = encryptionKey
+    assert(t['hello']=='world')
+    assert(t['hello2']=='world2')
+    assert(t.decryptFile()==0)
+    os.remove('test.config')
