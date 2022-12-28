@@ -1,14 +1,18 @@
 import pickle
 import os
 import warnings
+from cryptography.fernet import Fernet
 executableVersion = "0.7"
 class config:
     def __init__(self, path) -> None:
         self.path = path
+        self.encKey = None
         if os.path.exists(path)==False:
             try:
                 loadConfig = {}
                 loadConfig['_version'] = executableVersion
+                loadConfig['_encrypted'] = False
+                self.encKey = Fernet.generate_key()
                 with open(self.path, 'wb') as handle:
                     pickle.dump(loadConfig, handle, protocol=pickle.HIGHEST_PROTOCOL)
             except:
@@ -25,8 +29,8 @@ class config:
             raise NameError("property doesn't exist in configuration")
     def __setitem__(self, key, value):
         self.checkReady()
-        if key == '_version':
-            raise Exception("unable to change configuration version")
+        if key.startswith('_'):
+            raise Exception("unable to change configuration property")
         try:
             with open(self.path, 'rb') as handle:
                 loadedConfig = pickle.load(handle)
@@ -40,8 +44,8 @@ class config:
             raise Exception("error writing configuration file")
     def __delitem__(self, key):
         self.checkReady()
-        if key == '_version':
-            raise Exception("unable to delete configuration version")
+        if key.startswith('_'):
+            raise Exception("unable to delete configuration property")
         try:
             with open(self.path, 'rb') as handle:
                 loadedConfig = pickle.load(handle)
@@ -63,5 +67,7 @@ class config:
         except:
             raise NameError("property doesn't exist in configuration")
     def checkReady(self):
+        if self.encKey==None and self.getRaw('_encrypted')==True:
+            raise Exception('configuration is encrypted, but no encKey provided')
         if self.getRaw('_version')!=executableVersion:
             warnings.warn("version mismatch!")
