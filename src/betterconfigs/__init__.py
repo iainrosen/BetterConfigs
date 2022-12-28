@@ -14,6 +14,7 @@ class config:
             except:
                 raise Exception("attempted to initialize the configuration file but was unable to write")
     def __getitem__(self, key):
+        self.checkReady()
         if self.getVersion()!=executableVersion:
             warnings.warn("version mismatch!")
         try:
@@ -25,10 +26,9 @@ class config:
         except:
             raise NameError("property doesn't exist in configuration")
     def __setitem__(self, key, value):
+        self.checkReady()
         if key == '_version':
-            raise Exception("unable to change configuration version without upgrading")
-        if self.getVersion()!=executableVersion:
-            warnings.warn("version mismatch!")
+            raise Exception("unable to change configuration version")
         try:
             with open(self.path, 'rb') as handle:
                 loadedConfig = pickle.load(handle)
@@ -41,10 +41,9 @@ class config:
         except:
             raise Exception("error writing configuration file")
     def __delitem__(self, key):
+        self.checkReady()
         if key == '_version':
             raise Exception("unable to delete configuration version")
-        if self.getVersion()!=executableVersion:
-            warnings.warn("version mismatch!")
         try:
             with open(self.path, 'rb') as handle:
                 loadedConfig = pickle.load(handle)
@@ -56,13 +55,17 @@ class config:
             raise Exception("unable to find the configuration")
         except:
             raise Exception("error writing configuration file or property could not be deleted")
-    def getVersion(self):
+    def getRaw(self, key):
         try:
             with open(self.path, 'rb') as handle:
                 loadedConfig = pickle.load(handle)
-            return loadedConfig['_version']
+            return loadedConfig[key]
         except FileNotFoundError:
             raise Exception("configuration might not be initialized")
         except:
-            raise NameError("_version property doesn't exist in configuration")
-        
+            raise NameError("property doesn't exist in configuration")
+    def checkReady(self):
+        if self.getRaw('_version')!=executableVersion:
+            warnings.warn("version mismatch!")
+        if not self.isUnlocked:
+            raise Exception('configuration is locked, use unlock(key)')
