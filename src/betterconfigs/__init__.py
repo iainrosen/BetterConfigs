@@ -20,6 +20,8 @@ class config:
     def __getitem__(self, key):
         self.checkReady()
         try:
+            if self.getRaw('_encrypted'):
+                return self.decryptValue(key)
             with open(self.path, 'rb') as handle:
                 loadedConfig = pickle.load(handle)
             return loadedConfig[key]
@@ -32,6 +34,8 @@ class config:
         if key.startswith('_'):
             raise Exception("unable to change configuration property")
         try:
+            if self.getRaw('_encrypted'):
+                value = self.encryptValue(value)
             with open(self.path, 'rb') as handle:
                 loadedConfig = pickle.load(handle)
             loadedConfig[key] = value
@@ -71,3 +75,11 @@ class config:
             raise Exception('configuration is marked encrypted, but no encKey provided')
         if self.getRaw('_version')!=executableVersion:
             warnings.warn("version mismatch!")
+    def encryptValue(self, value):
+        self.checkReady()
+        fernet = Fernet(self.encKey)
+        return fernet.encrypt(value.encode())
+    def decryptValue(self, key):
+        self.checkReady()
+        fernet = Fernet(self.encKey)
+        return fernet.decrypt(self.getRaw(key)).decode()
