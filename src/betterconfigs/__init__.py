@@ -68,6 +68,6 @@ class config:
             raise NameError("property doesn't exist in configuration")
     def checkReady(self):
         if self.encKey==None and self.getRaw('_encrypted')==True:
-            raise Exception('configuration is encrypted, but no encKey provided')
+            raise Exception('configuration is marked encrypted, but no encKey provided')
         if self.getRaw('_version')!=executableVersion:
             warnings.warn("version mismatch!")
