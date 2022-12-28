@@ -75,6 +75,12 @@ class config:
             raise Exception('configuration is marked encrypted, but no encKey provided')
         if self.getRaw('_version')!=executableVersion:
             warnings.warn("version mismatch!")
+    def checkEncryptionValidity(self):
+        self.checkReady()
+        if self.decryptValue('_checksum')==self.encKey.decode():
+            return 0
+        else:
+            return 1
     def encryptValue(self, value):
         self.checkReady()
         fernet = Fernet(self.encKey)
@@ -91,6 +97,7 @@ class config:
             if not i.startswith("_"):
                 loadedConfig[i] = self.encryptValue(loadedConfig[i])
         loadedConfig['_encrypted']=True
+        loadedConfig['_checksum']=self.encryptValue(self.encKey.decode())
         with open(self.path, 'wb') as handle:
                 pickle.dump(loadedConfig, handle, protocol=pickle.HIGHEST_PROTOCOL)
         return 0
@@ -102,6 +109,7 @@ class config:
             if not i.startswith("_"):
                 loadedConfig[i] = self.decryptValue(i)
         loadedConfig['_encrypted']=False
+        loadedConfig.pop('_checksum')
         with open(self.path, 'wb') as handle:
                 pickle.dump(loadedConfig, handle, protocol=pickle.HIGHEST_PROTOCOL)
         return 0

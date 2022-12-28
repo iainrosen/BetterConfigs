@@ -58,3 +58,10 @@ def test_decryption():
     assert(h['hello']=='world')
     assert(h.getRaw('hello')=='world')
     os.remove('test.config')
+def test_checksum():
+    h = config('test.config')
+    assert(h['_encrypted']==False)
+    assert(h.encKey!=None)
+    h['hello']='world'
+    assert(h.encryptFile()==0)
+    assert(h.checkEncryptionValidity()==0)
