@@ -3,13 +3,13 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 [project]
 name = "betterconfigs"
-version = "0.6"
+version = "0.8"
 authors = [
   { name="Iain Rosen", email="hello@iainrosen.me" },
 ]
 description = "A small package to simplify configuration storing and retrieving"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.9"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",

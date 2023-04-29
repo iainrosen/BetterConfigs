@@ -2,7 +2,7 @@ import pickle
 import os
 import warnings
 from cryptography.fernet import Fernet
-executableVersion = "0.7"
+executableVersion = "0.8"
 class config:
     def __init__(self, path) -> None:
         self.path = path
