@@ -37,7 +37,6 @@ def test_encryption_checks():
     assert(t['_encrypted']==False)
     assert(t.encKey==None)
     os.remove('test.config')
-def test_encryption():
     h = config('test.config')
     assert(h['_encrypted']==False)
     assert(h.encKey!=None)
@@ -45,7 +44,7 @@ def test_encryption():
     assert(h.encryptFile()==0)
     assert(h['hello']=='world')
     assert(h.getRaw('hello')!='world')
-    assert(h.getRaw('_version')=='0.8')
+    assert(h.getRaw('_version')=='0.8.1')
     encryptionKey = h.encKey
     t = config('test.config')
     assert(t.getRaw('_encrypted')==True)
