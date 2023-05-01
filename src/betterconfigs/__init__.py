@@ -3,6 +3,7 @@ import os
 import warnings
 from cryptography.fernet import Fernet
 executableVersion = "0.8"
+supportedTypes=[int, str, list, bool]
 class config:
     def __init__(self, path) -> None:
         self.path = path
@@ -84,16 +85,34 @@ class config:
     def encryptValue(self, value):
         self.checkReady()
         fernet = Fernet(self.encKey)
-        if isinstance(value, int):
+        if type(value) not in supportedTypes:
+            raise Exception("type "+ type(value)+ " is not supported for encryption")
+        if 'bool.e' in str(value) or 'int.e' in str(value):
+            raise Exception("value contains encoding information before encoding occurred")
+        if type(value) is int:
             return fernet.encrypt(("int.e"+str(value)).encode())
+        elif type(value) is bool:
+            return fernet.encrypt(("bool.e"+str(value)).encode())
+        elif type(value) is list:
+            encList = []
+            for i in value:
+                encList.append(fernet.encrypt(i.encode()))
+            return encList
         else:
             return fernet.encrypt(value.encode())
     def decryptValue(self, key):
         self.checkReady()
         fernet = Fernet(self.encKey)
+        if type(self.getRaw(key)) is list:
+            decList=[]
+            for i in self.getRaw(key):
+                decList.append(fernet.decrypt(i).decode())
+            return decList
         dec = fernet.decrypt(self.getRaw(key)).decode()
         if dec[0:5]=='int.e':
             return int(dec[5:])
+        elif dec[0:6]=='bool.e':
+            return bool(dec[6:])
         else:
             return dec
     def encryptFile(self):

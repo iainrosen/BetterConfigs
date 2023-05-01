@@ -91,3 +91,24 @@ def test_encdec_int():
     h['hello2']=3
     assert(h['hello2']==3)
     os.remove('test.config')
+def test_encdec_bool():
+    h = config('test.config')
+    h['hello']='world'
+    assert(h.encryptFile()==0)
+    h['hello2']=True
+    assert(h['hello2']==True)
+    os.remove('test.config')
+def test_encdec_list():
+    h = config('test.config')
+    h['hello']='world'
+    assert(h.encryptFile()==0)
+    h['hello2']=['hello','world']
+    assert(h['hello2']==['hello','world'])
+    os.remove('test.config')
+def test_encdec_badtype():
+    h = config('test.config')
+    h['hello']='world'
+    assert(h.encryptFile()==0)
+    with pytest.raises(Exception):
+        h['hello2']=21.49857203958
+    os.remove('test.config')
