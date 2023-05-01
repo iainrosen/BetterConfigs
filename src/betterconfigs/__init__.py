@@ -84,11 +84,18 @@ class config:
     def encryptValue(self, value):
         self.checkReady()
         fernet = Fernet(self.encKey)
-        return fernet.encrypt(value.encode())
+        if isinstance(value, int):
+            return fernet.encrypt(("int.e"+str(value)).encode())
+        else:
+            return fernet.encrypt(value.encode())
     def decryptValue(self, key):
         self.checkReady()
         fernet = Fernet(self.encKey)
-        return fernet.decrypt(self.getRaw(key)).decode()
+        dec = fernet.decrypt(self.getRaw(key)).decode()
+        if dec[0:5]=='int.e':
+            return int(dec[5:])
+        else:
+            return dec
     def encryptFile(self):
         self.checkReady()
         with open(self.path, 'rb') as handle:

@@ -1,6 +1,12 @@
 from src.betterconfigs import *
 import os
 import pytest
+def test_cleanup():
+    try:
+        os.remove('test.config')
+    except:
+        pass
+    assert(os.path.exists('test.config')==False)
 def test_basic():
     h = config('test.config')
     h['hello'] = 'world'
@@ -39,7 +45,7 @@ def test_encryption():
     assert(h.encryptFile()==0)
     assert(h['hello']=='world')
     assert(h.getRaw('hello')!='world')
-    assert(h.getRaw('_version')=='0.7')
+    assert(h.getRaw('_version')=='0.8')
     encryptionKey = h.encKey
     t = config('test.config')
     assert(t.getRaw('_encrypted')==True)
@@ -77,4 +83,11 @@ def test_encdec():
     assert(t['hello']=='world')
     assert(t['hello2']=='world2')
     assert(t.decryptFile()==0)
+    os.remove('test.config')
+def test_encdec_int():
+    h = config('test.config')
+    h['hello']='world'
+    assert(h.encryptFile()==0)
+    h['hello2']=3
+    assert(h['hello2']==3)
     os.remove('test.config')
