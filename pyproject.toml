@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 [project]
 name = "betterconfigs"
-version = "0.8"
+version = "0.8.1"
 authors = [
   { name="Iain Rosen", email="hello@iainrosen.me" },
 ]
