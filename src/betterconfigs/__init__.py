@@ -86,7 +86,7 @@ class config:
         self.checkReady()
         fernet = Fernet(self.encKey)
         if type(value) not in supportedTypes:
-            raise Exception("type "+ type(value)+ " is not supported for encryption")
+            raise Exception("type "+ str(type(value))+ " is not supported for encryption")
         if 'bool.e' in str(value) or 'int.e' in str(value):
             raise Exception("value contains encoding information before encoding occurred")
         if type(value) is int:
