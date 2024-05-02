@@ -44,7 +44,7 @@ def test_encryption_checks():
     assert(h.encryptFile()==0)
     assert(h['hello']=='world')
     assert(h.getRaw('hello')!='world')
-    assert(h.getRaw('_version')=='0.8.3')
+    assert(h.getRaw('_version')==executableVersion)
     encryptionKey = h.encKey
     t = config('test.config')
     assert(t.getRaw('_encrypted')==True)
